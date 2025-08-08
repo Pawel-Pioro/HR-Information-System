@@ -11,14 +11,14 @@ export default function Login() {
     const [error, setError] = useState(null)
 
     const [userInputs, setUserInputs] = useState({
-        "username": "",
+        "email": "",
         "password": ""
     })
 
     function onSubmit(e) {
         e.preventDefault()
 
-        if (userInputs.username && userInputs.password) {
+        if (userInputs.email && userInputs.password) {
             client.post('auth/login/', userInputs).then((response) => {
                 loginHandler(response.data.tokens)
                 navigate('/')
@@ -48,8 +48,8 @@ export default function Login() {
                     <h1 className="font-bold text-4xl text-center my-3">Login</h1>
                     <form onSubmit={onSubmit}>
                         <fieldset className="fieldset">
-                            <label className="label">Username</label>
-                            <input type="text" onChange={(e) => setUserInputs({ ...userInputs, "username": e.target.value })} value={userInputs.username} className="input" placeholder="Username" />
+                            <label className="label">Email</label>
+                            <input type="email" onChange={(e) => setUserInputs({ ...userInputs, "email": e.target.value })} value={userInputs.emai} className="input" placeholder="Email" />
                             <label className="label">Password</label>
                             <input type="password" onChange={(e) => setUserInputs({ ...userInputs, "password": e.target.value })} value={userInputs.password} className="input" placeholder="Password" />
                             <button className="btn btn-neutral mt-4">Login</button>

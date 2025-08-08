@@ -10,7 +10,8 @@ export default function Register() {
     const [error, setError] = useState(null)
 
     const [userInputs, setUserInputs] = useState({
-        "username": "",
+        "firstName": "",
+        "lastName": "",
         "email": "",
         "password": "",
         "confirmPassword": ""
@@ -19,10 +20,11 @@ export default function Register() {
     function onSubmit(e) {
         e.preventDefault()
 
-        if (userInputs.username && userInputs.password && userInputs.confirmPassword && userInputs.email) {
+        if (userInputs.firstName && userInputs.lastName && userInputs.password && userInputs.confirmPassword && userInputs.email) {
             if (userInputs.password === userInputs.confirmPassword) {
                 client.post('auth/register/', {
-                    "username": userInputs.username,
+                    "first_name": userInputs.firstName,
+                    "last_name": userInputs.lastName,
                     "email": userInputs.email,
                     "password": userInputs.password
                 }).then((response) => {
@@ -58,8 +60,32 @@ export default function Register() {
                     <h1 className="font-bold text-4xl text-center my-3">Create Account</h1>
                     <form onSubmit={onSubmit}>
                         <fieldset className="fieldset">
-                            <label className="label">Username</label>
-                            <input type="text" onChange={(e) => setUserInputs({ ...userInputs, "username": e.target.value })} value={userInputs.username} className="input" placeholder="Username" />
+                            <div className="flex flex-col sm:flex-row sm:space-x-4 w-full">
+                                <div className="flex-1">
+                                    <label className="label">First Name</label>
+                                    <input
+                                        type="text"
+                                        onChange={(e) =>
+                                            setUserInputs({ ...userInputs, firstName: e.target.value })
+                                        }
+                                        value={userInputs.firstName}
+                                        className="input w-full"
+                                        placeholder="First Name"
+                                    />
+                                </div>
+                                <div className="flex-1 sm:mt-0 mt-2">
+                                    <label className="label">Last Name</label>
+                                    <input
+                                        type="text"
+                                        onChange={(e) =>
+                                            setUserInputs({ ...userInputs, lastName: e.target.value })
+                                        }
+                                        value={userInputs.lastName}
+                                        className="input w-full"
+                                        placeholder="Last Name"
+                                    />
+                                </div>
+                            </div>
                             <label className="label">Email</label>
                             <input type="text" onChange={(e) => setUserInputs({ ...userInputs, "email": e.target.value })} value={userInputs.email} className="input" placeholder="Email" />
                             <label className="label mt-5">Password</label>
