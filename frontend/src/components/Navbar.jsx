@@ -16,7 +16,7 @@ export default function Navbar() {
     return (
         <div className="navbar bg-base-300 shadow-lg flex justify-around">
             <div className="">
-                <Link to="/" className="btn btn-ghost text-xl">Navbar</Link>
+                <Link to="/" className="btn btn-ghost text-xl">HRIS</Link>
                 <ul className="menu menu-horizontal px-1 md:pl-10">
                     <li>
                         {user.logged_in === true
