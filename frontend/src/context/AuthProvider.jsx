@@ -69,7 +69,7 @@ export default function AuthProvider({ children }) {
                 if (error.response && error.response.status === 401 && RanRequest === false) {
                     try {
                         RanRequest = true
-                        const response = await client.post('token/refresh/', {
+                        const response = await client.post('auth/token/refresh/', {
                             refresh: localStorage.getItem('refresh')
                         })
                         RanRequest = false
