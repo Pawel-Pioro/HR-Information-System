@@ -35,7 +35,7 @@ export default function Navbar() {
                 user.logged_in === true
                     ? (
                         <details className="dropdown">
-                            <summary className="btn m-1">{user.username}</summary>
+                            <summary className="btn m-1">{user.first_name}</summary>
                             <ul className="menu dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
                                 <li><a onClick={logoutOnClick}>Logout</a></li>
                             </ul>

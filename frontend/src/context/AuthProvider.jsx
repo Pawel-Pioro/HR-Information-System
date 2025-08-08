@@ -12,8 +12,9 @@ export default function AuthProvider({ children }) {
     const { client } = useContext(APIContext)
 
     const defaultUser = {
-        "username": "",
         "email": "",
+        "first_name": "",
+        "last_name": "",
         "is_staff": false,
         "logged_in": false
     }
