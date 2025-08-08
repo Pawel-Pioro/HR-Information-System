@@ -1,5 +1,9 @@
 from django.contrib.auth.base_user import BaseUserManager
 
+# managers are a way for models and database to interact with each other
+# i am using managers for my custom user model to change the default validation behaviour 
+
+
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, first_name, last_name, password=None, **extra_fields):
         if not email:

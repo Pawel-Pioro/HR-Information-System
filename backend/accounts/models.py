@@ -37,12 +37,10 @@ class Employee(models.Model):
     hiredDate = models.DateField(auto_now_add=True)
     startTime = models.TimeField(default='08:00:00')
     endTime = models.TimeField(default='17:00:00')
-    daysPerWeek = models.IntegerField(default=0)
     manager = models.ForeignKey(UserModel, on_delete=models.SET_NULL, null=True, blank=True, related_name='team_members')
 
     hourlyRate = models.DecimalField(max_digits=10,decimal_places=2, default=0)
     bonuses = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    hoursLogged = models.IntegerField(default=0)
     leaveBalance = models.IntegerField(default=0)
 
 class Attendance(models.Model):
