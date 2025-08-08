@@ -5,7 +5,7 @@ import { APIContext, AuthContext } from "../../context/contexts.js";
 
 export default function Login() {
     const { client } = useContext(APIContext)
-    const { loginHandler } = useContext(AuthContext)
+    const { loginHandler, setLoading } = useContext(AuthContext)
     const navigate = useNavigate()
 
     const [error, setError] = useState(null)

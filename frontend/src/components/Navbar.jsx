@@ -5,12 +5,12 @@ import { useNavigate } from "react-router-dom";
 
 
 export default function Navbar() {
-    const { user, logoutHandler } = useContext(AuthContext)
+    const { user, logoutHandler, setLoading } = useContext(AuthContext)
     const navigate = useNavigate()
 
     function logoutOnClick() {
-        logoutHandler()
         navigate('/login')
+        logoutHandler()
     }
 
     return (

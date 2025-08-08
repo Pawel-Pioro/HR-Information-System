@@ -5,8 +5,9 @@ import { AuthContext } from "./context/contexts.js";
 import Layout from "./pages/Layout.jsx"
 import LandingPage from "./pages/LandingPage.jsx"
 import Login from "./pages/Auth/Login.jsx"
-import Dashboard from "./pages/Dashboard.jsx"
 import Register from "./pages/Auth/Register.jsx";
+import EmployeeDashboard from "./pages/Employee/EmployeeDashboard.jsx";
+import ManagementDashboard from "./pages/Management/ManagementDashboard.jsx";
 
 
 function App() {
@@ -26,9 +27,13 @@ function App() {
         <Route path='/' element={<Layout />} >
           {user.logged_in === true
             ? (
-              <>
-                <Route index element={<Dashboard />} />
-              </>
+              user.is_staff === true
+                ? (
+                  <Route index element={<ManagementDashboard />} />
+                )
+                : (
+                  <Route index element={<EmployeeDashboard />} />
+                )
             )
             : (
               <>

@@ -25,18 +25,22 @@ export default function AuthProvider({ children }) {
     const [loading, setLoading] = useState(true)
 
     function loginHandler(tokens) {
+        setLoading(true)
         setAccessToken(tokens.access)
         localStorage.setItem('refresh', tokens.refresh)
         getUserInfo()
     }
 
     function logoutHandler() {
+        setLoading(true)
         setAccessToken(null)
         setUser(defaultUser)
         localStorage.removeItem('refresh')
+        setLoading(false)
     }
 
     function getUserInfo() {
+        setLoading(true)
         client.get('me/').then((response) => {
             setUser({
                 ...response.data.user,
@@ -44,6 +48,10 @@ export default function AuthProvider({ children }) {
             })
             setLoading(false)
         })
+            .catch((error) => {
+                setUser(defaultUser)
+                setLoading(false)
+            })
     }
 
 
@@ -109,7 +117,7 @@ export default function AuthProvider({ children }) {
     }, [])
 
     return (
-        <AuthContext value={{ accessToken, setAccessToken, user, loginHandler, logoutHandler, loading }}>
+        <AuthContext value={{ accessToken, setAccessToken, user, loginHandler, logoutHandler, loading, setLoading }}>
             {children}
         </AuthContext>
     )
