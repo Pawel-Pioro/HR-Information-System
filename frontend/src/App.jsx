@@ -8,7 +8,7 @@ import Login from "./pages/Auth/Login.jsx"
 import Register from "./pages/Auth/Register.jsx";
 import EmployeeDashboard from "./pages/Employee/EmployeeDashboard.jsx";
 import ManagementDashboard from "./pages/Management/ManagementDashboard.jsx";
-
+import NotFound from "./pages/404notFound.jsx";
 
 function App() {
 
@@ -42,6 +42,7 @@ function App() {
                 <Route path='register' element={<Register />} />
               </>
             )}
+          <Route path='*' element={<NotFound />} />
         </Route>
       </Routes>
     </BrowserRouter>
