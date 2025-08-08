@@ -33,7 +33,7 @@ class Employee(models.Model):
     jobTitle = models.CharField(max_length=100)
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True)
     employmentType = models.CharField(max_length=50, default='Full-Time', choices=[('Full-Time', 'Full-Time'), ('Part-Time', 'Part-Time'), ('Contract', 'Contract'), ('Intern', 'Intern'), ('Student', 'Student'), ('Other', 'Other')])
-    employmentStatus = models.CharField(max_length=30, default='Active', choices=[('Active', 'Active'), ('On Leave', 'On Leave'), ('Terminated', 'Terminated'), ('Other', 'Other')])
+    employmentStatus = models.CharField(max_length=30, default='Active', choices=[('Active', 'Active'), ('On Leave', 'On Leave'), ('Terminated', 'Terminated'), ('Inactive', 'Inactive'), ('Other', 'Other')])
     hiredDate = models.DateField(auto_now_add=True)
     startTime = models.TimeField(default='08:00:00')
     endTime = models.TimeField(default='17:00:00')
