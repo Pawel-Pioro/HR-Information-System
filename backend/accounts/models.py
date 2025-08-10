@@ -26,12 +26,12 @@ class Department(models.Model):
 
 class Employee(models.Model):
     user = models.OneToOneField(UserModel, on_delete=models.CASCADE)
-    gender = models.CharField(max_length=10)
+    gender = models.CharField(max_length=10, choices=[('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')])
     dateOfBirth = models.DateField()
     phoneNumber = models.CharField(max_length=20)
 
     jobTitle = models.CharField(max_length=100)
-    department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True)
+    department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True, related_name='members')
     employmentType = models.CharField(max_length=50, default='Full-Time', choices=[('Full-Time', 'Full-Time'), ('Part-Time', 'Part-Time'), ('Contract', 'Contract'), ('Intern', 'Intern'), ('Student', 'Student'), ('Other', 'Other')])
     employmentStatus = models.CharField(max_length=30, default='Active', choices=[('Active', 'Active'), ('On Leave', 'On Leave'), ('Terminated', 'Terminated'), ('Inactive', 'Inactive'), ('Other', 'Other')])
     hiredDate = models.DateField(auto_now_add=True)
@@ -43,6 +43,9 @@ class Employee(models.Model):
     bonuses = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     leaveBalance = models.IntegerField(default=0)
 
+    def __str__(self):
+        return self.user.email
+    
 class Attendance(models.Model):
     user = models.ForeignKey(Employee, on_delete=models.CASCADE)
     date = models.DateField(auto_now_add=True)

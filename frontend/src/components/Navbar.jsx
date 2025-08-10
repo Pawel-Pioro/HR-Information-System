@@ -21,7 +21,16 @@ export default function Navbar() {
                     <li>
                         {user.logged_in === true
                             ? (
-                                <></>
+                                user.is_staff === true
+                                    ? (
+                                        <>
+                                            <Link to="/employees" className="btn btn-ghost">Employees</Link>
+                                        </>
+                                    )
+                                    : (
+                                        <>
+                                        </>
+                                    )
                             )
                             : (
                                 <>

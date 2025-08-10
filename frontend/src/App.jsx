@@ -9,6 +9,8 @@ import Register from "./pages/Auth/Register.jsx";
 import EmployeeDashboard from "./pages/Employee/EmployeeDashboard.jsx";
 import ManagementDashboard from "./pages/Management/ManagementDashboard.jsx";
 import NotFound from "./pages/404notFound.jsx";
+import ManageEmployees from "./pages/Management/ManageEmployees.jsx";
+import EmployeeDetail from "./components/Management/EmployeeDetail.jsx";
 
 function App() {
 
@@ -20,7 +22,7 @@ function App() {
       </div>
     )
   }
-
+  console.log(user.logged_in)
   return (
     <BrowserRouter>
       <Routes>
@@ -29,10 +31,17 @@ function App() {
             ? (
               user.is_staff === true
                 ? (
-                  <Route index element={<ManagementDashboard />} />
+                  <>
+                    <Route index element={<ManagementDashboard />} />
+                    <Route path="employees" element={<ManageEmployees />} />
+                    <Route path="employees/:id" element={<EmployeeDetail />} />
+                  </>
                 )
                 : (
-                  <Route index element={<EmployeeDashboard />} />
+                  <>
+                    <Route index element={<EmployeeDashboard />} />
+
+                  </>
                 )
             )
             : (

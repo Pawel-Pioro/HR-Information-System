@@ -32,3 +32,17 @@ class CustomUserAdmin(UserAdmin):
 class EmployeeAdmin(admin.ModelAdmin):
     pass
 
+@admin.register(models.Department)
+class DepartmentAdmin(admin.ModelAdmin):
+    list_display = ('name', 'get_members')
+
+    def get_members(self, obj):
+        return ", ".join(str(member) for member in obj.members.all())
+
+@admin.register(models.Attendance)
+class AttendanceAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(models.LeaveRequest)
+class LeaveRequestAdmin(admin.ModelAdmin):
+    pass

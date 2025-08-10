@@ -74,14 +74,15 @@ export default function AuthProvider({ children }) {
             (response) => response,
             async (error) => {
                 const originalRequest = error.config
-                console.log(RanRequest)
                 if (error.response && error.response.status === 401 && RanRequest === false) {
+                    setLoading(true)
                     try {
                         RanRequest = true
                         const response = await client.post('auth/token/refresh/', {
                             refresh: localStorage.getItem('refresh')
                         })
                         RanRequest = false
+                        setLoading(false)
                         if (response.status === 200) {
                             setAccessToken(response.data.access)
 
