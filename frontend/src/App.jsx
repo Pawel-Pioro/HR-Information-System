@@ -10,7 +10,7 @@ import EmployeeDashboard from "./pages/Employee/EmployeeDashboard.jsx";
 import ManagementDashboard from "./pages/Management/ManagementDashboard.jsx";
 import NotFound from "./pages/404notFound.jsx";
 import ManageEmployees from "./pages/Management/ManageEmployees.jsx";
-import EmployeeDetail from "./components/Management/EmployeeDetail.jsx";
+import EmployeeDetail from "./components/Management/EmployeeDetail/EmployeeDetail.jsx";
 
 function App() {
 

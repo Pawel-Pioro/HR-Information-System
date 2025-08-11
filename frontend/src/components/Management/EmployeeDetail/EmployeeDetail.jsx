@@ -1,0 +1,37 @@
+import { useContext, useEffect, useState } from "react"
+import { useNavigate, useParams } from "react-router-dom"
+import { APIContext } from "../../../context/contexts"
+import ProfileSummary from "./ProfileSummary"
+
+export default function EmployeeDetail() {
+    const { id } = useParams()
+    const { client } = useContext(APIContext)
+
+    const Navigate = useNavigate()
+
+    const [employee, setEmployee] = useState({})
+
+    useEffect(() => {
+        client.get(`accounts/employees/${id}/`).then((response) => {
+            setEmployee(response.data.employee)
+        }).catch((error) => {
+            Navigate('/employees')
+        })
+    }, [])
+    console.log(employee)
+    return (
+        <div>
+            <button className="btn btn-ghost my-3" onClick={() => { Navigate('/employees') }}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-return-left" viewBox="0 0 16 16">
+                    <path fillRule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5" />
+                </svg>
+                Go back
+            </button>
+            <div className="grid grid-cols-12 gap-4">
+                <div className="col-span-12 md:col-span-6 xl:col-span-4">
+                    <ProfileSummary employee={employee} />
+                </div>
+            </div>
+        </div>
+    )
+}
