@@ -28,7 +28,7 @@ export default function EmployeeDetail() {
                 Go back
             </button>
             <div className="grid grid-cols-12 gap-4">
-                <div className="col-span-12 md:col-span-6 xl:col-span-4">
+                <div className="col-span-12 sm:col-span-6 xl:col-span-4">
                     <ProfileSummary employee={employee} />
                 </div>
             </div>

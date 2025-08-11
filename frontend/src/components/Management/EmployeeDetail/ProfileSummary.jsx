@@ -47,10 +47,10 @@ export default function ProfileSummary({ employee }) {
     }
 
     return (
-        <div className="card card-border bg-base-100 w-full ">
+        <div className="card card-border bg-base-200 w-full ">
             <div className="p-6">
-                <div className="mb-5">
-                    <h1 className="font-bold text-3xl">{employee.first_name} {employee.last_name}</h1>
+                <div className="grid place-self-center md:place-self-start mb-5">
+                    <h1 className="font-bold text-3xl mb-2">{employee.first_name} {employee.last_name}</h1>
 
                     {employee.employee != null ?
                         <>
@@ -61,7 +61,7 @@ export default function ProfileSummary({ employee }) {
                     }
                 </div>
 
-                <div className="grid grid-cols-[30px_auto] gap-y-2 items-center">
+                <div className="grid grid-cols-[30px_auto] gap-y-2 place-self-center md:place-self-start items-center">
                     {/* ID */}
                     <p className="font-bold text-lg">id</p>
                     <p className="text-lg">#{employee.id}</p>
