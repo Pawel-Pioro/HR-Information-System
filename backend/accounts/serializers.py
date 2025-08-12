@@ -8,15 +8,16 @@ from .models import Employee, Department
 class DepartmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Department
-        fields = ('name',)
+        fields = ('id', 'name',)
 
 class UserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserModel
-        fields = ('email', 'is_staff', 'first_name', 'last_name')  
+        fields = ('id', 'email', 'is_staff', 'first_name', 'last_name')  
 
 class EmployeeDetailSerializer(serializers.ModelSerializer):
     department = DepartmentSerializer()
+    manager = UserInfoSerializer()
 
     class Meta:
         model = Employee

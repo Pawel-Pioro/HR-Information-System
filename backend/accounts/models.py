@@ -39,9 +39,9 @@ class Employee(models.Model):
     endTime = models.TimeField(default='17:00:00')
     manager = models.ForeignKey(UserModel, on_delete=models.SET_NULL, null=True, blank=True, related_name='team_members')
 
-    hourlyRate = models.DecimalField(max_digits=10,decimal_places=2, default=0)
+    hourlyRate = models.DecimalField(max_digits=10,decimal_places=2,)
     bonuses = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    leaveBalance = models.IntegerField(default=0)
+    leaveBalance = models.IntegerField()
 
     def __str__(self):
         return self.user.email
