@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { APIContext } from "../../../context/contexts"
 import ProfileSummary from "./ProfileSummary"
+import EmploymentSummary from "./EmploymentSummary"
 
 export default function EmployeeDetail() {
     const { id } = useParams()
@@ -27,9 +28,12 @@ export default function EmployeeDetail() {
                 </svg>
                 Go back
             </button>
-            <div className="grid grid-cols-12 gap-4">
-                <div className="col-span-12 sm:col-span-6 xl:col-span-4">
+            <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-4">
+                <div className="">
                     <ProfileSummary employee={employee} />
+                </div>
+                <div className="">
+                    {employee.employee && <EmploymentSummary employee={employee} />}
                 </div>
             </div>
         </div>

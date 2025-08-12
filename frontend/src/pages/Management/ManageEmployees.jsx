@@ -16,47 +16,51 @@ function EmployeeTable() {
         })
         setLoading(false)
     }, [])
+    console.log(employees)
     return (
-        <div className="overflow-x-auto">
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Full Name</th>
-                        <th>Email</th>
-                        <th>Job Title</th>
-                        <th>Department</th>
-                        <th>Status</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {employees.map((employee) => (
-                        <tr key={employee.id}>
-                            <td>{employee.id}</td>
-                            <td>{employee.first_name} {employee.last_name}</td>
-                            <td>{employee.email}</td>
-                            {employee.employee != null
-                                ? (
-                                    <>
-                                        <td>{employee.employee.jobTitle}</td>
-                                        <td>{employee.employee.department ? employee.employee.department.name : "N/A"}</td>
-                                        <td>{employee.employee.employmentStatus}</td>
-                                    </>
-                                )
-                                : (<>
-                                    <td>Not an employee yet</td>
-                                    <td>N/A</td>
-                                    <td>N/A</td>
-                                </>
-                                )
-                            }
-                            <td><button className="btn btn-neutral" onClick={() => { Navigate(`/employees/${employee.id}`) }}>Manage</button></td>
+        <>
+            <h1 className="text-lg ml-4">{employees.length} results</h1>
+            <div className="overflow-x-auto">
+                <table className="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Full Name</th>
+                            <th>Email</th>
+                            <th>Job Title</th>
+                            <th>Department</th>
+                            <th>Status</th>
+                            <th></th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody>
+                        {employees.map((employee) => (
+                            <tr key={employee.id}>
+                                <td>{employee.id}</td>
+                                <td>{employee.first_name} {employee.last_name}</td>
+                                <td>{employee.email}</td>
+                                {employee.employee != null
+                                    ? (
+                                        <>
+                                            <td>{employee.employee.jobTitle}</td>
+                                            <td>{employee.employee.department ? employee.employee.department.name : "N/A"}</td>
+                                            <td>{employee.employee.employmentStatus}</td>
+                                        </>
+                                    )
+                                    : (<>
+                                        <td>Not an employee yet</td>
+                                        <td>N/A</td>
+                                        <td>N/A</td>
+                                    </>
+                                    )
+                                }
+                                <td><button className="btn btn-neutral" onClick={() => { Navigate(`/employees/${employee.id}`) }}>Manage</button></td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </>
     )
 }
 
