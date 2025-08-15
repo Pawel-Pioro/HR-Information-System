@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import { APIContext } from "../../../context/contexts"
 import ProfileSummary from "./ProfileSummary"
 import EmploymentSummary from "./EmploymentSummary"
+import Attendance from "./Attendance"
 
 export default function EmployeeDetail() {
     const { id } = useParams()
@@ -32,8 +33,12 @@ export default function EmployeeDetail() {
                 <div className="">
                     <ProfileSummary employee={employee} />
                 </div>
-                <div className="">
-                    {employee.employee && <EmploymentSummary employee={employee} />}
+                <div className="grid gap-4">
+                    {employee.employee &&
+                        <>
+                            <EmploymentSummary employee={employee} />
+                            <Attendance employee={employee} />
+                        </>}
                 </div>
             </div>
         </div>

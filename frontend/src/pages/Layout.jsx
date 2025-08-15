@@ -6,7 +6,7 @@ export default function Layout() {
         <div>
             <Navbar />
             <div className='grid grid-cols-12'>
-                <div className='col-span-10 md:col-span-8 col-start-2 md:col-start-3'>
+                <div className='col-span-10 lg:col-span-8 col-start-2 lg:col-start-3'>
                     <Outlet />
                 </div>
             </div>

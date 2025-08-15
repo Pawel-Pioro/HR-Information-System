@@ -68,11 +68,12 @@ class LeaveRequest(models.Model):
         ('Other', 'Other'),
     ]
 
-    user = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    user = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='leaveRequests')
     leave_type = models.CharField(max_length=50, choices=LEAVE_TYPE_CHOICES)
-    start_date = models.DateField(auto_now_add=True)
+    start_date = models.DateField()
     end_date = models.DateField()
     reason = models.TextField(blank=True)
+    is_pending = models.BooleanField(default=True)
 
     def duration(self):
         return (self.end_date - self.start_date).days + 1
