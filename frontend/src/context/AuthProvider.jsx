@@ -74,7 +74,7 @@ export default function AuthProvider({ children }) {
             (response) => response,
             async (error) => {
                 const originalRequest = error.config
-                if (error.response && error.response.status === 401 && RanRequest === false) {
+                if (error.response && (error.response.status === 401 || error.response.status === 403) && RanRequest === false) {
                     setLoading(true)
                     try {
                         RanRequest = true

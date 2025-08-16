@@ -6,7 +6,7 @@ export default function LeaveRequestModal({ leaveRequestInfo }) {
   const { client } = useContext(APIContext)
 
   function rejectRequest() {
-    client.patch(`accounts/leaveRequests/${leaveRequestInfo.id}/`, {
+    client.patch(`accounts/leaveRequests/${leaveRequestInfo.id}/reject/`, {
       "is_pending": false
     }).then((response) => {
       window.location.reload()
