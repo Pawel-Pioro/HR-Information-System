@@ -3,8 +3,10 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework import status, viewsets, mixins
 
-from .serializers import UserInfoSerializer, UserSerializer, UserDetailSerializer, LeaveRequestSerializer
-from .models import UserModel, LeaveRequest, Employee
+from datetime import date
+
+from .serializers import DepartmentSerializer, UserInfoSerializer, UserSerializer, UserDetailSerializer, LeaveRequestSerializer
+from .models import Department, UserModel, LeaveRequest, Employee
 
 
 @api_view(['GET'])
@@ -15,55 +17,69 @@ def userInfo(request):
 
     return Response({"user": userSerializer.data}, status=status.HTTP_200_OK)
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def manageEmployees(request):
-    if request.method == 'GET':
-        if request.user.is_staff:
-            users = UserModel.objects.all()
-            serializer = UserSerializer(users, many=True)
-
-            return Response({"employees": serializer.data}, status=status.HTTP_200_OK)
-        else:
-            return Response({"error": "You are not authorized to perform this action."}, status=status.HTTP_403_FORBIDDEN)
-    else:
-        return Response({"error": "Invalid request method."}, status=status.HTTP_400_BAD_REQUEST)
-    
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def manageOneEmployee(request, id):
-    if request.method == 'GET':
-        if request.user.is_staff:
-            if UserModel.objects.filter(id=id).exists():
-                user = UserModel.objects.get(id=id)
-                userSerializer = UserDetailSerializer(user)
-
-                return Response({"employee": userSerializer.data}, status=status.HTTP_200_OK)
-            else:
-                return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-        else:
-            return Response({"error": "You are not authorized to perform this action."}, status=status.HTTP_403_FORBIDDEN)
-    else:
-        return Response({"error": "Invalid request method."}, status=status.HTTP_400_BAD_REQUEST)
-# @api_view(['PATCH'])
+# @api_view(['GET'])
 # @permission_classes([IsAuthenticated])
-# def oneLeaveRequest(request, id):
-#     if request.method == "PATCH":
+# def manageEmployees(request):
+#     if request.method == 'GET':
 #         if request.user.is_staff:
-#             if LeaveRequest.objects.filter(id=id).exists():
-#                 leaveRequest = LeaveRequest.objects.get(id=id)
-#                 serializer = LeaveRequestSerializer(leaveRequest, data=request.data, partial=True)
-#                 if serializer.is_valid():
-#                     serializer.save()
-#                     return Response(serializer.data, status=status.HTTP_200_OK)
-#                 else:
-#                     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#             users = UserModel.objects.all()
+#             serializer = UserSerializer(users, many=True)
+
+#             return Response({"employees": serializer.data}, status=status.HTTP_200_OK)
+#         else:
+#             return Response({"error": "You are not authorized to perform this action."}, status=status.HTTP_403_FORBIDDEN)
+#     else:
+#         return Response({"error": "Invalid request method."}, status=status.HTTP_400_BAD_REQUEST)
+    
+# @api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+# def manageOneEmployee(request, id):
+#     if request.method == 'GET':
+#         if request.user.is_staff:
+#             if UserModel.objects.filter(id=id).exists():
+#                 user = UserModel.objects.get(id=id)
+#                 userSerializer = UserDetailSerializer(user)
+
+#                 return Response({"employee": userSerializer.data}, status=status.HTTP_200_OK)
 #             else:
 #                 return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 #         else:
 #             return Response({"error": "You are not authorized to perform this action."}, status=status.HTTP_403_FORBIDDEN)
 #     else:
 #         return Response({"error": "Invalid request method."}, status=status.HTTP_400_BAD_REQUEST)
+
+class UserViewset(
+    viewsets.GenericViewSet,
+    mixins.RetrieveModelMixin,
+    mixins.ListModelMixin,
+    mixins.UpdateModelMixin,
+):
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return UserModel.objects.all()
+        else:
+            return UserModel.objects.none()
+        
+    def get_serializer_class(self):
+        if self.action == "list":
+            return UserSerializer
+
+        return UserDetailSerializer
+
+class DepartmentViewset(
+    viewsets.GenericViewSet,
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    mixins.DestroyModelMixin,
+):
+    serializer_class = DepartmentSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return Department.objects.all()
+        else:
+            return Department.objects.none()
 
 class LeaveRequestViewset(
     viewsets.GenericViewSet,
@@ -77,7 +93,7 @@ class LeaveRequestViewset(
         user = self.request.user
         if user.is_staff:
             return LeaveRequest.objects.all()
-        
+
         try:
             employee = Employee.objects.get(user=user)
         except Employee.DoesNotExist:
@@ -86,13 +102,36 @@ class LeaveRequestViewset(
         return LeaveRequest.objects.filter(user=employee)
     
     @action(detail=True, methods=['patch'], permission_classes=[IsAuthenticated])
+    def accept(self, request, pk):
+        leave_request = self.get_object()
+        if not request.user.is_staff:
+            return Response({"error": "You are not authorized to perform this action."}, status=status.HTTP_403_FORBIDDEN)
+        
+        if leave_request.duration() > leave_request.user.leaveBalance:
+            return Response({"error": "Not enough leave balance."}, status=status.HTTP_400_BAD_REQUEST)
+
+        leave_request.is_pending = False
+        leave_request.save()
+
+        employee = leave_request.user
+        
+        if leave_request.leave_type.deducts_balance:
+            employee.leaveBalance -= leave_request.duration()
+
+        if leave_request.start_date == date.today():
+            employee.employmentStatus = "On Leave"
+        
+        employee.save()
+
+        serializer = self.get_serializer(leave_request)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['delete'], permission_classes=[IsAuthenticated])
     def reject(self, request, pk):
         leave_request = self.get_object()
         if not request.user.is_staff:
             return Response({"error": "You are not authorized to perform this action."}, status=status.HTTP_403_FORBIDDEN)
 
-        leave_request.is_pending = False
-        leave_request.save()
+        leave_request.delete()
 
-        serializer = self.get_serializer(leave_request)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"message": "Leave request deleted successfully"}, status=status.HTTP_200_OK)

@@ -11,6 +11,7 @@ import ManagementDashboard from "./pages/Management/ManagementDashboard.jsx";
 import NotFound from "./pages/404notFound.jsx";
 import ManageEmployees from "./pages/Management/ManageEmployees.jsx";
 import EmployeeDetail from "./components/Management/EmployeeDetail/EmployeeDetail.jsx";
+import EditEmployee from "./components/Management/EmployeeDetail/EditEmployee/EditEmployee.jsx";
 
 function App() {
 
@@ -34,7 +35,9 @@ function App() {
                   <>
                     <Route index element={<ManagementDashboard />} />
                     <Route path="employees" element={<ManageEmployees />} />
-                    <Route path="employees/:id" element={<EmployeeDetail />} />
+                    <Route path="employees/:id" element={<EmployeeDetail />}>
+                      <Route path="edit" element={<EditEmployee />} />
+                    </Route>
                   </>
                 )
                 : (

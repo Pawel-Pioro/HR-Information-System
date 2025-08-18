@@ -46,3 +46,7 @@ class AttendanceAdmin(admin.ModelAdmin):
 @admin.register(models.LeaveRequest)
 class LeaveRequestAdmin(admin.ModelAdmin):
     pass
+
+@admin.register(models.LeaveType)
+class LeaveTypeAdmin(admin.ModelAdmin):
+    pass

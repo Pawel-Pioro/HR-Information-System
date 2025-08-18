@@ -23,7 +23,6 @@ class Department(models.Model):
         return self.name
 
 
-
 class Employee(models.Model):
     user = models.OneToOneField(UserModel, on_delete=models.CASCADE)
     gender = models.CharField(max_length=10, choices=[('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')])
@@ -60,16 +59,16 @@ class Attendance(models.Model):
     def __str__(self):
         return f"{self.user} - {self.clock_in.date()}"
     
-class LeaveRequest(models.Model):
-    LEAVE_TYPE_CHOICES = [
-        ('Vacation', 'Vacation'),
-        ('Sick', 'Sick Leave'),
-        ('Unpaid', 'Unpaid Leave'),
-        ('Other', 'Other'),
-    ]
+class LeaveType(models.Model):
+    name = models.CharField(max_length=50)
+    deducts_balance = models.BooleanField(default=True)
 
+    def __str__(self):
+        return self.name
+
+class LeaveRequest(models.Model):
     user = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='leaveRequests')
-    leave_type = models.CharField(max_length=50, choices=LEAVE_TYPE_CHOICES)
+    leave_type = models.ForeignKey(LeaveType, on_delete=models.CASCADE)
     start_date = models.DateField()
     end_date = models.DateField()
     reason = models.TextField(blank=True)

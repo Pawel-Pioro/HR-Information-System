@@ -6,9 +6,13 @@ export default function LeaveRequestModal({ leaveRequestInfo }) {
   const { client } = useContext(APIContext)
 
   function rejectRequest() {
-    client.patch(`accounts/leaveRequests/${leaveRequestInfo.id}/reject/`, {
-      "is_pending": false
-    }).then((response) => {
+    client.delete(`accounts/leaveRequests/${leaveRequestInfo.id}/reject/`).then((response) => {
+      window.location.reload()
+    })
+  }
+
+  function acceptRequest() {
+    client.patch(`accounts/leaveRequests/${leaveRequestInfo.id}/accept/`).then((response) => {
       window.location.reload()
     })
   }
@@ -29,10 +33,10 @@ export default function LeaveRequestModal({ leaveRequestInfo }) {
           <div className='pl-3'>
             <p className='text-sm'><span className="font-bold pr-3">Duration</span>{leaveRequestInfo.duration} days</p>
             <p className='text-sm'><span className="font-bold pr-3">End Date</span>{moment(leaveRequestInfo.end_date).format('D MMMM YYYY')}</p>
-            <p className='text-sm'><span className="font-bold pr-3">Leave Type</span>{leaveRequestInfo.leave_type}</p>
+            <p className='text-sm'><span className="font-bold pr-3">Leave Type</span>{leaveRequestInfo.leave_type_name}</p>
             <p className='text-sm'><span className="font-bold pr-3">Reason</span>{leaveRequestInfo.reason}</p>
             <div className='flex gap-3 place-self-center mt-3'>
-              <button className='btn btn-success'>Accept</button>
+              <button className='btn btn-success' onClick={acceptRequest}>Accept</button>
               <button className='btn btn-error' onClick={rejectRequest}>Reject</button>
             </div>
           </div>

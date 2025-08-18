@@ -12,10 +12,11 @@ function EmployeeTable() {
     useEffect(() => {
         setLoading(true)
         client.get("accounts/employees/").then((response) => {
-            setEmployees(response.data.employees)
+            setEmployees(response.data)
         })
         setLoading(false)
     }, [])
+    console.log(employees)
     return (
         <>
             <h1 className="text-lg ml-4">{employees.length} results</h1>
@@ -42,7 +43,7 @@ function EmployeeTable() {
                                     ? (
                                         <>
                                             <td>{employee.employee.jobTitle}</td>
-                                            <td>{employee.employee.department ? employee.employee.department.name : "N/A"}</td>
+                                            <td>{employee.employee.department ? employee.employee.department : "N/A"}</td>
                                             <td>{employee.employee.employmentStatus}</td>
                                         </>
                                     )

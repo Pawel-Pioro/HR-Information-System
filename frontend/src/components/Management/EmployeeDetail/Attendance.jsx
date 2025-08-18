@@ -36,7 +36,7 @@ export default function Attendance({ employee }) {
             <>
               {employee.employee.leave_requests.map((request) => (
                 <div key={request.id} className="flex shadow mt-3 p-3 bg-base-100 gap-2 items-center">
-                  <p>{moment(request.start_date).format('D MMMM YYYY')}</p>
+                  <p className="text-sm">{moment(request.start_date).format('D MMMM YYYY')}</p>
                   <button className="btn btn-sm" onClick={() => selectRequestHandler(request)}>View</button>
                 </div>
               ))}
