@@ -35,9 +35,8 @@ function App() {
                   <>
                     <Route index element={<ManagementDashboard />} />
                     <Route path="employees" element={<ManageEmployees />} />
-                    <Route path="employees/:id" element={<EmployeeDetail />}>
-                      <Route path="edit" element={<EditEmployee />} />
-                    </Route>
+                    <Route path="employees/:id" element={<EmployeeDetail />} />
+                    <Route path="employees/:id/edit" element={<EditEmployee />} />
                   </>
                 )
                 : (

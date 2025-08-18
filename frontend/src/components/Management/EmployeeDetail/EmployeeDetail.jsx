@@ -4,7 +4,6 @@ import { APIContext, AuthContext } from "../../../context/contexts"
 import ProfileSummary from "./ProfileSummary"
 import EmploymentSummary from "./EmploymentSummary"
 import Attendance from "./Attendance"
-import EditEmployee from "./EditEmployee/EditEmployee"
 
 export default function EmployeeDetail() {
     const { id } = useParams()
@@ -13,7 +12,6 @@ export default function EmployeeDetail() {
     const Navigate = useNavigate()
 
     const [employee, setEmployee] = useState({})
-    const [editMode, setEditMode] = useState(false)
 
     useEffect(() => {
         client.get(`accounts/employees/${id}/`).then((response) => {
@@ -23,19 +21,11 @@ export default function EmployeeDetail() {
         })
     }, [])
 
-    function goBackButtonHandler() {
-        if (editMode) {
-            setEditMode(false)
-        } else {
-            Navigate('/employees')
-        }
-    }
-
     console.log(employee)
     return (
         <div>
             <div className="flex justify-between items-center">
-                <button className="btn btn-ghost my-3" onClick={() => { goBackButtonHandler() }}>
+                <button className="btn btn-ghost my-3" onClick={() => { Navigate('/employees') }}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-return-left" viewBox="0 0 16 16">
                         <path fillRule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5" />
                     </svg>
@@ -49,29 +39,22 @@ export default function EmployeeDetail() {
                         </svg>
                     </div>
                     <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-1 w-26 p-2 shadow-sm">
-                        <li><a onClick={() => { setEditMode(true) }}>Edit</a></li>
+                        <li><a onClick={() => { Navigate(`/employees/${id}/edit`) }}>Edit</a></li>
                         <li><a className="text-error">Delete</a></li>
                     </ul>
                 </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-4">
-                {editMode ?
-                    <>
-                        <EditEmployee employee={employee} setEditMode={setEditMode} />
-                    </>
-                    : <>
-                        <div className="">
-                            <ProfileSummary employee={employee} />
-                        </div>
-                        <div className="grid gap-4">
-                            {employee.employee &&
-                                <>
-                                    <EmploymentSummary employee={employee} />
-                                    <Attendance employee={employee} />
-                                </>}
-                        </div>
-                    </>
-                }
+                <div className="">
+                    <ProfileSummary employee={employee} />
+                </div>
+                <div className="grid gap-4">
+                    {employee.employee &&
+                        <>
+                            <EmploymentSummary employee={employee} />
+                            <Attendance employee={employee} />
+                        </>}
+                </div>
             </div>
         </div>
     )
