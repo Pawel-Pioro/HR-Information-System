@@ -23,7 +23,6 @@ function App() {
       </div>
     )
   }
-  console.log(user.logged_in)
   return (
     <BrowserRouter>
       <Routes>

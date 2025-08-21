@@ -16,7 +16,6 @@ function EmployeeTable() {
         })
         setLoading(false)
     }, [])
-    console.log(employees)
     return (
         <>
             <h1 className="text-lg ml-4">{employees.length} results</h1>

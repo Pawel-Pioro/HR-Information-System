@@ -29,9 +29,18 @@ class UserInfoSerializer(serializers.ModelSerializer):
 class EmployeeDetailSerializer(serializers.ModelSerializer):
     department = serializers.SlugRelatedField(
         slug_field='name', 
+        allow_null=True,
         queryset=Department.objects.all()
     )
-    manager = UserInfoSerializer()
+    manager = serializers.SlugRelatedField(
+        slug_field='email',
+        allow_null=True,
+        queryset=UserModel.objects.all(),
+        write_only=True
+    )
+
+    manager_detail = UserInfoSerializer(source='manager', read_only=True)
+
     leave_requests = serializers.SerializerMethodField()
 
     class Meta:
@@ -41,6 +50,7 @@ class EmployeeDetailSerializer(serializers.ModelSerializer):
     def get_leave_requests(self, obj):
         pendingRequests = obj.leaveRequests.filter(is_pending=True)
         return LeaveRequestSerializer(pendingRequests, many=True).data
+    
 
 class EmployeeListSerializer(serializers.ModelSerializer):
     department = serializers.SlugRelatedField(slug_field='name', queryset=Department.objects.all())

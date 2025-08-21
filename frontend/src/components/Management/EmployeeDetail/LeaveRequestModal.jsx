@@ -17,7 +17,6 @@ export default function LeaveRequestModal({ leaveRequestInfo }) {
     })
   }
 
-  console.log(leaveRequestInfo)
   return (
     <dialog id="leaveRequestModal" className="modal modal-bottom sm:modal-middle">
       {leaveRequestInfo &&

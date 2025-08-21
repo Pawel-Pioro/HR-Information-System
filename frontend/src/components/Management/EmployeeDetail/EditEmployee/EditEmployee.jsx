@@ -43,6 +43,14 @@ export default function EditEmployee() {
                 ...(data.employee?.department && { department: data.employee?.department }),
                 jobTitle: data.employee?.jobTitle,
                 dateOfBirth: data.employee?.dateOfBirth,
+
+                employmentType: data.employee?.employmentType,
+                manager: data.employee?.manager_detail?.email,
+                hiredDate: data.employee?.hiredDate,
+                startTime: data.employee?.startTime,
+                endTime: data.employee?.endTime,
+                hourlyRate: data.employee?.hourlyRate,
+                bonuses: data.employee?.bonuses
             })
 
         }).catch((error) => {
@@ -95,8 +103,20 @@ export default function EditEmployee() {
                 <div className="grid gap-4">
                     {employee.employee &&
                         <>
-                            <EditEmploymentSummary employee={employee} />
-                            <EditAttendance employee={employee} />
+                            <EditEmploymentSummary
+                                employee={employee}
+                                userInputValues={userInputValues}
+                                setUserInputValues={setUserInputValues}
+                                employeeInputValues={employeeInputValues}
+                                setEmployeeInputValues={setEmployeeInputValues}
+                            />
+                            <EditAttendance
+                                employee={employee}
+                                userInputValues={userInputValues}
+                                setUserInputValues={setUserInputValues}
+                                employeeInputValues={employeeInputValues}
+                                setEmployeeInputValues={setEmployeeInputValues}
+                            />
                         </>
                     }
                 </div>
