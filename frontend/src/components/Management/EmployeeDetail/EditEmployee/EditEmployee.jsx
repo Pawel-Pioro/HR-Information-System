@@ -4,6 +4,7 @@ import EditEmploymentSummary from "./EditEmploymentSummary"
 import EditProfileSummary from "./EditProfileSummary"
 import { APIContext } from "../../../../context/contexts"
 import { useNavigate, useParams } from "react-router-dom"
+import AlertPopup from "../../../AlertPopup"
 
 export default function EditEmployee() {
     const { id } = useParams()
@@ -26,8 +27,10 @@ export default function EditEmployee() {
         dateOfBirth: "",
     })
 
+    const [message, setMessage] = useState({ type: '', text: '', description: '' })
+
     useEffect(() => {
-        client.get(`accounts/employees/${id}/`).then((response) => {
+        client.get(`accounts/users/${id}/`).then((response) => {
             const data = response.data
 
             setEmployee(data)
@@ -60,11 +63,21 @@ export default function EditEmployee() {
         })
     }, [])
 
-
+    function getFirstFieldError(errors) {
+        for (const [title, value] of Object.entries(errors)) {
+            if (Array.isArray(value) && value.length > 0) {
+                return { title, message: value[0] } // return field name + first error
+            } else if (typeof value === "object") {
+                const nested = getFirstFieldError(value)
+                if (nested) return nested
+            }
+        }
+        return null
+    }
 
     function updateEmployee() {
 
-        client.patch(`accounts/employees/${employee.id}/`, {
+        client.patch(`accounts/users/${employee.id}/`, {
             ...userInputValues,
             employee: {
                 ...employeeInputValues
@@ -73,6 +86,16 @@ export default function EditEmployee() {
             Navigate(`/employees/${id}`)
         }).catch((error) => {
             console.log(error)
+            if (error.response.status === 400) {
+                let errorObj = (error.response.data)
+                const { title: errorTitle, message: errorDesc } = getFirstFieldError(errorObj)
+                // let errorTitle = Object.keys(errorObj)[0]
+                // let errorDesc = Object.values(errorObj)[0][0]
+                console.log(errorObj)
+                console.log(errorTitle)
+                console.log(errorDesc)
+                setMessage({ type: 'error', text: `Invalid value for ${errorTitle}`, description: errorDesc })
+            }
         })
     }
     console.log({
@@ -84,6 +107,7 @@ export default function EditEmployee() {
 
     return (
         <div>
+            <AlertPopup message={message} setMessage={setMessage} />
             <div className="flex justify-between items-center">
                 <button className="btn btn-ghost my-3" onClick={() => { Navigate(`/employees/${id}`) }}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-return-left" viewBox="0 0 16 16">

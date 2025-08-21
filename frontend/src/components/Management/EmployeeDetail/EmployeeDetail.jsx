@@ -4,6 +4,8 @@ import { APIContext, AuthContext } from "../../../context/contexts"
 import ProfileSummary from "./ProfileSummary"
 import EmploymentSummary from "./EmploymentSummary"
 import Attendance from "./Attendance"
+import DeleteEmployeeModal from "./DeleteEmployeeModal"
+import AlertPopup from "../../AlertPopup"
 
 export default function EmployeeDetail() {
     const { id } = useParams()
@@ -12,18 +14,19 @@ export default function EmployeeDetail() {
     const Navigate = useNavigate()
 
     const [employee, setEmployee] = useState({})
+    const [message, setMessage] = useState({ type: '', text: '', description: '' })
 
     useEffect(() => {
-        client.get(`accounts/employees/${id}/`).then((response) => {
+        client.get(`accounts/users/${id}/`).then((response) => {
             setEmployee(response.data)
         }).catch((error) => {
-            Navigate('/employees')
+            // Navigate('/employees')
         })
     }, [])
 
-    console.log(employee)
     return (
         <div>
+            <AlertPopup message={message} setMessage={setMessage} />
             <div className="flex justify-between items-center">
                 <button className="btn btn-ghost my-3" onClick={() => { Navigate('/employees') }}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-return-left" viewBox="0 0 16 16">
@@ -40,7 +43,7 @@ export default function EmployeeDetail() {
                     </div>
                     <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-1 w-26 p-2 shadow-sm">
                         <li><a onClick={() => { Navigate(`/employees/${id}/edit`) }}>Edit</a></li>
-                        <li><a className="text-error">Delete</a></li>
+                        <li><a onClick={() => { document.getElementById('deleteEmployeeModal').showModal() }} className="text-error">Delete</a></li>
                     </ul>
                 </div>
             </div>
@@ -56,6 +59,7 @@ export default function EmployeeDetail() {
                         </>}
                 </div>
             </div>
+            <DeleteEmployeeModal employee={employee} setMessage={setMessage} />
         </div>
     )
 }

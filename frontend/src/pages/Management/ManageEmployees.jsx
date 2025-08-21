@@ -11,7 +11,7 @@ function EmployeeTable() {
 
     useEffect(() => {
         setLoading(true)
-        client.get("accounts/employees/").then((response) => {
+        client.get("accounts/users/").then((response) => {
             setEmployees(response.data)
         })
         setLoading(false)

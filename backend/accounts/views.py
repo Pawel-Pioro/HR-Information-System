@@ -5,7 +5,7 @@ from rest_framework import status, viewsets, mixins
 
 from datetime import date
 
-from .serializers import DepartmentSerializer, UserInfoSerializer, UserSerializer, UserDetailSerializer, LeaveRequestSerializer
+from .serializers import DepartmentSerializer, EmployeeDetailSerializer, UserInfoSerializer, UserSerializer, UserDetailSerializer, LeaveRequestSerializer
 from .models import Department, UserModel, LeaveRequest, Employee
 
 
@@ -34,6 +34,22 @@ class UserViewset(
             return UserSerializer
 
         return UserDetailSerializer
+    
+class EmployeeViewset(
+    viewsets.GenericViewSet,
+    mixins.CreateModelMixin,
+    mixins.DestroyModelMixin,
+):
+    serializer_class = EmployeeDetailSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return Employee.objects.all()
+        else:
+            return Employee.objects.none()
+    
+    
 
 class DepartmentViewset(
     viewsets.GenericViewSet,
