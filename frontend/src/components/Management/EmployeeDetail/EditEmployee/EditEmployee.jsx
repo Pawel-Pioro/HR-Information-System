@@ -50,7 +50,9 @@ export default function EditEmployee() {
                 startTime: data.employee?.startTime,
                 endTime: data.employee?.endTime,
                 hourlyRate: data.employee?.hourlyRate,
-                bonuses: data.employee?.bonuses
+                bonuses: data.employee?.bonuses,
+
+                leaveBalance: data.employee?.leaveBalance,
             })
 
         }).catch((error) => {
@@ -120,7 +122,7 @@ export default function EditEmployee() {
                         </>
                     }
                 </div>
-                <div className="card-actions mr-4 mt-5">
+                <div className="card-actions justify-end col-span-1 md:col-span-2  mr-4 mt-5">
                     <button className="btn btn-success" onClick={updateEmployee}>Save</button>
                 </div>
             </div>

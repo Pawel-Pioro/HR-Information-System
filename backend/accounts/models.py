@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import MinValueValidator
 from django.utils import timezone
+from decimal import Decimal
 from .managers import CustomUserManager
 from .validators import phoneValidator, dateOfBirthValidator
 
@@ -40,9 +42,9 @@ class Employee(models.Model):
     endTime = models.TimeField(default='17:00:00')
     manager = models.ForeignKey(UserModel, on_delete=models.SET_NULL, null=True, blank=True, related_name='team_members')
 
-    hourlyRate = models.DecimalField(max_digits=10,decimal_places=2,)
-    bonuses = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    leaveBalance = models.IntegerField()
+    hourlyRate = models.DecimalField(max_digits=10,decimal_places=2, validators=[MinValueValidator(Decimal('0.00'))])
+    bonuses = models.DecimalField(max_digits=10, decimal_places=2, default=0, validators=[MinValueValidator(Decimal('0.00'))])
+    leaveBalance = models.IntegerField(validators=[MinValueValidator(Decimal('0.00'))])
 
     def __str__(self):
         return self.user.email
