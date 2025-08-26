@@ -15,7 +15,13 @@ export default function EditAttendance({
                     <div className="stats">
                         <div className="stat place-items-center">
                             <div className="stat-title">Leave Balance</div>
-                            <input min={0} className="input w-1/2 font-extrabold text-center text-xl validator" type="number" value={employeeInputValues.leaveBalance} onChange={(e) => { setEmployeeInputValues({ ...employeeInputValues, leaveBalance: e.target.value }) }} />
+                            <input
+                                min={0}
+                                className="input w-1/2 font-extrabold text-center text-xl validator"
+                                type="number" value={employeeInputValues.leaveBalance}
+                                onChange={(e) => { setEmployeeInputValues({ ...employeeInputValues, leaveBalance: e.target.value }) }}
+                                placeholder="Balance"
+                            />
                             <div className="stat-desc">Days remaining</div>
                         </div>
                     </div>

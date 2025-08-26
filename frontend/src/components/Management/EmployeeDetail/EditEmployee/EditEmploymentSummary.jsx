@@ -78,7 +78,9 @@ export default function EditEmploymentSummary({
                             required
                             value={employeeInputValues.hourlyRate}
                             onChange={(e) => { setEmployeeInputValues({ ...employeeInputValues, hourlyRate: e.target.value }) }}
-                            className=" input validator w-1/4" />
+                            className=" input validator w-1/4"
+                            placeholder="Amount"
+                        />
 
                         <p><span className="font-semibold">/ hour</span></p>
                     </div>
@@ -92,7 +94,9 @@ export default function EditEmploymentSummary({
                             required
                             value={employeeInputValues.bonuses}
                             onChange={(e) => { setEmployeeInputValues({ ...employeeInputValues, bonuses: e.target.value }) }}
-                            className=" input validator w-1/2" />
+                            className=" input validator w-1/2"
+                            placeholder="Bonuses"
+                        />
                     </div>
                 </div>
             </div>

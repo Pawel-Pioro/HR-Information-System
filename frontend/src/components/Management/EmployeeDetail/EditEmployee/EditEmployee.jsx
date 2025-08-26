@@ -41,18 +41,13 @@ export default function EditEmployee() {
                 email: data.email
             })
             setEmployeeInputValues({
+                ...employeeInputValues,
                 employmentStatus: data.employee?.employmentStatus,
-                phoneNumber: data.employee?.phoneNumber,
-                ...(data.employee?.department && { department: data.employee?.department }),
-                jobTitle: data.employee?.jobTitle,
                 dateOfBirth: data.employee?.dateOfBirth,
 
-                employmentType: data.employee?.employmentType,
-                manager: data.employee?.manager_detail?.email,
                 hiredDate: data.employee?.hiredDate,
                 startTime: data.employee?.startTime,
                 endTime: data.employee?.endTime,
-                hourlyRate: data.employee?.hourlyRate,
                 bonuses: data.employee?.bonuses,
 
                 leaveBalance: data.employee?.leaveBalance,

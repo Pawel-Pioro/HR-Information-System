@@ -2,7 +2,7 @@ import moment from 'moment'
 import { useContext } from 'react'
 import { APIContext } from '../../../context/contexts'
 
-export default function LeaveRequestModal({ leaveRequestInfo }) {
+export default function LeaveRequestModal({ leaveRequestInfo, setMessage }) {
   const { client } = useContext(APIContext)
 
   function rejectRequest() {
@@ -15,6 +15,12 @@ export default function LeaveRequestModal({ leaveRequestInfo }) {
     client.patch(`accounts/leaveRequests/${leaveRequestInfo.id}/accept/`).then((response) => {
       window.location.reload()
     })
+      .catch((error) => {
+        setMessage({
+          type: 'error',
+          text: error.response.data.error,
+        })
+      })
   }
 
   return (

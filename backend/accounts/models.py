@@ -1,8 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator
-from django.utils import timezone
 from decimal import Decimal
+import datetime
 from .managers import CustomUserManager
 from .validators import phoneValidator, dateOfBirthValidator
 
@@ -37,7 +37,7 @@ class Employee(models.Model):
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True, related_name='members')
     employmentType = models.CharField(max_length=50, default='Full-Time', choices=[('Full-Time', 'Full-Time'), ('Part-Time', 'Part-Time'), ('Contract', 'Contract'), ('Intern', 'Intern'), ('Student', 'Student'), ('Other', 'Other')])
     employmentStatus = models.CharField(max_length=30, default='Active', choices=[('Active', 'Active'), ('On Leave', 'On Leave'), ('Terminated', 'Terminated'), ('Inactive', 'Inactive'), ('Other', 'Other')])
-    hiredDate = models.DateField(default=timezone.now)
+    hiredDate = models.DateField(default=datetime.date.today)
     startTime = models.TimeField(default='08:00:00')
     endTime = models.TimeField(default='17:00:00')
     manager = models.ForeignKey(UserModel, on_delete=models.SET_NULL, null=True, blank=True, related_name='team_members')

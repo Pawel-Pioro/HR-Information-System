@@ -23,6 +23,21 @@ export default function EmployeeDetail() {
             // Navigate('/employees')
         })
     }, [])
+    function createEmployee() {
+        const today = new Date().toISOString().split("T")[0];
+        client.post(`accounts/employees/`, {
+            user: id,
+            gender: "Other",
+            dateOfBirth: today,
+            phoneNumber: "123456789",
+            jobTitle: "Title",
+            hourlyRate: 0,
+            leaveBalance: 0,
+        }).catch((error) => {
+            console.log(error)
+        })
+        Navigate(`/employees/${id}/edit`)
+    }
 
     return (
         <div>
@@ -52,11 +67,21 @@ export default function EmployeeDetail() {
                     <ProfileSummary employee={employee} />
                 </div>
                 <div className="grid gap-4">
-                    {employee.employee &&
+                    {employee.employee ?
                         <>
                             <EmploymentSummary employee={employee} />
-                            <Attendance employee={employee} />
-                        </>}
+                            <Attendance employee={employee} setMessage={setMessage} />
+                        </>
+                        :
+                        <>
+                            <div className="card card-border bg-base-300 w-full ">
+                                <div className="card-body">
+                                    <h2 className="card-title">No data found</h2>
+                                    <p className="text-base">To make this user an employee, <a onClick={createEmployee} className="font-bold underline cursor-pointer"> click here</a> </p>
+                                </div>
+                            </div>
+                        </>
+                    }
                 </div>
             </div>
             <DeleteEmployeeModal employee={employee} setMessage={setMessage} />

@@ -2,7 +2,7 @@ import { useState } from "react";
 import moment from 'moment'
 import LeaveRequestModal from "./LeaveRequestModal";
 
-export default function Attendance({ employee }) {
+export default function Attendance({ employee, setMessage }) {
   const [selectedRequest, setSelectedRequest] = useState(null)
 
   function selectRequestHandler(request) {
@@ -40,7 +40,7 @@ export default function Attendance({ employee }) {
                   <button className="btn btn-sm" onClick={() => selectRequestHandler(request)}>View</button>
                 </div>
               ))}
-              <LeaveRequestModal leaveRequestInfo={selectedRequest} />
+              <LeaveRequestModal leaveRequestInfo={selectedRequest} setMessage={setMessage} />
             </>
             : <>
               <p className=" text-center mt-2 font-light">No requests made</p>

@@ -1,7 +1,8 @@
 from rest_framework.decorators import api_view, permission_classes, action
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework import status, viewsets, mixins
+
 
 from datetime import date
 
@@ -41,7 +42,7 @@ class EmployeeViewset(
     mixins.DestroyModelMixin,
 ):
     serializer_class = EmployeeDetailSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
 
     def get_queryset(self):
         if self.request.user.is_staff:

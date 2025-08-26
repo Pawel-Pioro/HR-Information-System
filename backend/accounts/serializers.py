@@ -27,16 +27,19 @@ class UserInfoSerializer(serializers.ModelSerializer):
         fields = ('id', 'email', 'is_staff', 'first_name', 'last_name')  
 
 class EmployeeDetailSerializer(serializers.ModelSerializer):
+    dateOfBirth = serializers.DateField(format="%Y-%m-%d")
     department = serializers.SlugRelatedField(
         slug_field='name', 
         allow_null=True,
-        queryset=Department.objects.all()
+        queryset=Department.objects.all(),
+        required=False
     )
     manager = serializers.SlugRelatedField(
         slug_field='email',
         allow_null=True,
         queryset=UserModel.objects.all(),
-        write_only=True
+        write_only=True,
+        required=False
     )
 
     manager_detail = UserInfoSerializer(source='manager', read_only=True)
