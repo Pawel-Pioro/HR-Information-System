@@ -52,16 +52,22 @@ class Employee(models.Model):
 class Attendance(models.Model):
     user = models.ForeignKey(Employee, on_delete=models.CASCADE)
     date = models.DateField(auto_now_add=True)
-    clockIn = models.TimeField(auto_now_add=True,)
-    clockOut = models.TimeField(null=True, blank=True)
+    clockIn = models.DateTimeField(auto_now_add=True,)
+    clockOut = models.DateTimeField(null=True, blank=True)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["user", "date"], name="unique_user_date")
+        ]
+        
     def hours_worked(self):
-        if self.clock_out:
-            return (self.clock_out - self.clock_in).total_seconds() / 3600
+        if self.clockOut:
+            return (self.clockOut - self.clockIn).total_seconds() / 3600
         return 0
 
     def __str__(self):
-        return f"{self.user} - {self.clock_in.date()}"
+        return f"{self.user} - {self.date}"
+    
     
 class LeaveType(models.Model):
     name = models.CharField(max_length=50)

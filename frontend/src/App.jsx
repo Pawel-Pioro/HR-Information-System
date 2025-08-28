@@ -6,12 +6,12 @@ import Layout from "./pages/Layout.jsx"
 import LandingPage from "./pages/LandingPage.jsx"
 import Login from "./pages/Auth/Login.jsx"
 import Register from "./pages/Auth/Register.jsx";
-import EmployeeDashboard from "./pages/Employee/EmployeeDashboard.jsx";
 import ManagementDashboard from "./pages/Management/ManagementDashboard.jsx";
 import NotFound from "./pages/404notFound.jsx";
 import ManageEmployees from "./pages/Management/ManageEmployees.jsx";
 import EmployeeDetail from "./components/Management/EmployeeDetail/EmployeeDetail.jsx";
 import EditEmployee from "./components/Management/EmployeeDetail/EditEmployee/EditEmployee.jsx";
+import EmployeeLandingPage from "./pages/Employee/EmployeeLandingPage.jsx";
 
 function App() {
 
@@ -40,7 +40,7 @@ function App() {
                 )
                 : (
                   <>
-                    <Route index element={<EmployeeDashboard />} />
+                    <Route index element={<EmployeeLandingPage />} />
 
                   </>
                 )

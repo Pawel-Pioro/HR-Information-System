@@ -3,11 +3,25 @@ from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework import status, viewsets, mixins
 
-
 from datetime import date
+from django.utils import timezone
 
-from .serializers import DepartmentSerializer, EmployeeDetailSerializer, UserInfoSerializer, UserSerializer, UserDetailSerializer, LeaveRequestSerializer
-from .models import Department, UserModel, LeaveRequest, Employee
+from .serializers import (
+    DepartmentSerializer, 
+    EmployeeDetailSerializer, 
+    UserInfoSerializer, 
+    UserSerializer, 
+    UserDetailSerializer, 
+    LeaveRequestSerializer,
+    AttendanceSerializer
+)
+from .models import (
+    Department,
+    UserModel,
+    LeaveRequest,
+    Employee,
+    Attendance
+)
 
 
 @api_view(['GET'])
@@ -36,6 +50,99 @@ class UserViewset(
 
         return UserDetailSerializer
     
+class AttendanceViewset(
+    viewsets.GenericViewSet,
+):
+    serializer_class = AttendanceSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_employee_from_user(self, user):
+        if Employee.objects.filter(user=user).exists():
+            return Employee.objects.get(user=user)
+        else:
+            return None
+        
+    def get_attendance_today(self, ):
+        today = date.today()
+
+        if not self.get_queryset().filter(date=today).exists():
+            return None
+        
+        queryset = self.get_queryset().get(date=today)
+
+        return queryset
+
+    def get_queryset(self):
+        user = self.request.user
+        AttendanceObjects = Attendance.objects.all()
+
+        if user.is_staff:
+            userId = self.request.query_params.get('user', None)
+            if userId:
+                return AttendanceObjects.filter(user__id=userId)
+
+        employee = self.get_employee_from_user(user)
+        if employee:
+            return AttendanceObjects.filter(user=employee)
+        else:
+            return AttendanceObjects.none()
+    
+    @action(detail=False, methods=['get'])
+    def today(self, request):
+        queryset = self.get_attendance_today()
+        if not queryset:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        serializer = self.get_serializer(queryset)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    @action(detail=False, methods=['post'])
+    def clock_in(self, request):
+        user = request.user
+        employee = self.get_employee_from_user(user)
+        if not employee:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+        attendanceToday = self.get_attendance_today()
+        if not attendanceToday:
+            newAttendance = Attendance.objects.create(user=employee)
+            serializer = self.get_serializer(newAttendance)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            if attendanceToday.clockOut is not None:
+                # employee already clocked out, clocking in again
+                attendanceToday.clockOut = timezone.now()
+                attendanceToday.save()
+                serializer = self.get_serializer(attendanceToday)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                # employee clocked in, hasnt clocked out yet
+                return Response(status=status.HTTP_400_BAD_REQUEST) 
+            
+
+    @action(detail=False, methods=['post'])
+    def clock_out(self, request):
+        user = request.user
+        employee = self.get_employee_from_user(user)
+        if not employee:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+        attendanceToday = self.get_attendance_today()
+        if not attendanceToday:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        else:
+            attendanceToday.clockOut = timezone.now()
+            attendanceToday.save()
+            serializer = self.get_serializer(attendanceToday)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+
+
+        
+
+
 class EmployeeViewset(
     viewsets.GenericViewSet,
     mixins.CreateModelMixin,

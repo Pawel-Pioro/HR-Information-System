@@ -1,9 +1,11 @@
+import pytz
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 
 UserModel = get_user_model()
 
-from .models import Employee, Department, LeaveRequest
+from .models import Employee, Department, LeaveRequest, Attendance
 
 class LeaveRequestSerializer(serializers.ModelSerializer):
     leave_type_name = serializers.CharField(source='leave_type.name', read_only=True)
@@ -15,6 +17,14 @@ class LeaveRequestSerializer(serializers.ModelSerializer):
 
     def get_duration(self, obj):
         return obj.duration()
+    
+class AttendanceSerializer(serializers.ModelSerializer):
+    clockIn = serializers.DateTimeField( read_only=True)
+    clockOut = serializers.DateTimeField( allow_null=True, required=False)
+
+    class Meta:
+        model = Attendance
+        fields = '__all__'
 
 class DepartmentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,7 +34,7 @@ class DepartmentSerializer(serializers.ModelSerializer):
 class UserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserModel
-        fields = ('id', 'email', 'is_staff', 'first_name', 'last_name')  
+        fields = ('id', 'email', 'is_staff', 'first_name', 'last_name', 'employee')  
 
 class EmployeeDetailSerializer(serializers.ModelSerializer):
     dateOfBirth = serializers.DateField(format="%Y-%m-%d")
