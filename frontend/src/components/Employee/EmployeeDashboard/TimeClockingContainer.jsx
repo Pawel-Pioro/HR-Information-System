@@ -27,7 +27,7 @@ export default function TimeClockingContainer() {
         return new Date(time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }
 
-    function getMinutesDifference(targetTimeStr) {
+    function getMinutesDifferenceFromNow(targetTimeStr) {
         console.log(targetTimeStr)
         const now = new Date();
         const [hours, minutes] = targetTimeStr.split(":").map(Number);
@@ -37,7 +37,19 @@ export default function TimeClockingContainer() {
         return [Math.floor(rounded / 60), rounded % 60];
     }
 
-    console.log(attendanceToday)
+    function getHoursDifferenceFromTime(targetTimeStr1, targetTimeStr2) {
+        const [hours1, minutes1] = targetTimeStr1.split(":").map(Number);
+        const time1 = new Date();
+        time1.setHours(hours1, minutes1, 0, 0);
+
+        const [hours2, minutes2] = targetTimeStr2.split(":").map(Number);
+        const time2 = new Date();
+        time2.setHours(hours2, minutes2, 0, 0);
+
+        const rounded = Math.round((time2 - time1) / 60000)
+        return [Math.floor(rounded / 60), rounded % 60];
+    }
+
     return (
         <div className="card card-border bg-base-200 w-full">
             <div className="p-6 place-items-center">
@@ -49,11 +61,11 @@ export default function TimeClockingContainer() {
                                 <div>
                                     <p className="font-bold mb-3">You are currently clocked in for:</p>
                                     <p className="font-bold text-xl text-center mb-2">{
-                                        getMinutesDifference(
+                                        getMinutesDifferenceFromNow(
                                             getLocalTime(attendanceToday.clockIn)
                                         )[0]
                                     }h {
-                                            getMinutesDifference(
+                                            getMinutesDifferenceFromNow(
                                                 getLocalTime(attendanceToday.clockIn)
                                             )[1]
                                         }m</p>
@@ -64,12 +76,15 @@ export default function TimeClockingContainer() {
                                 <div>
                                     <p className="font-bold mb-3">You were last clocked out at <span className="text-xl">{getLocalTime(attendanceToday.clockOut)}</span> for:</p>
                                     <p className="font-bold text-xl text-center mb-2">{
-                                        getMinutesDifference(
-                                            new Date(attendanceToday.clockIn).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                                        )[0]
+                                        getHoursDifferenceFromTime(
+                                            getLocalTime(attendanceToday.clockIn),
+                                            getLocalTime(attendanceToday.clockOut)
+                                        )
+                                        [0]
                                     }h {
-                                            getMinutesDifference(
-                                                new Date(attendanceToday.clockIn).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', })
+                                            getHoursDifferenceFromTime(
+                                                getLocalTime(attendanceToday.clockIn),
+                                                getLocalTime(attendanceToday.clockOut)
                                             )[1]
                                         }m</p>
                                     <button onClick={clockOutHandler} className="btn btn-primary w-full">Clock hours</button>

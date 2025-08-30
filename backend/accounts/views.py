@@ -13,14 +13,16 @@ from .serializers import (
     UserSerializer, 
     UserDetailSerializer, 
     LeaveRequestSerializer,
-    AttendanceSerializer
+    AttendanceSerializer,
+    LeaveTypeSerializer
 )
 from .models import (
     Department,
     UserModel,
     LeaveRequest,
     Employee,
-    Attendance
+    Attendance,
+    LeaveType
 )
 
 
@@ -28,7 +30,7 @@ from .models import (
 @permission_classes([IsAuthenticated])
 def userInfo(request):
     user = request.user
-    userSerializer = UserInfoSerializer(user)
+    userSerializer = UserDetailSerializer(user)
 
     return Response({"user": userSerializer.data}, status=status.HTTP_200_OK)
 
@@ -47,9 +49,16 @@ class UserViewset(
     def get_serializer_class(self):
         if self.action == "list":
             return UserSerializer
-
         return UserDetailSerializer
     
+class LeaveTypeViewset(
+    viewsets.GenericViewSet,
+    mixins.ListModelMixin
+):
+    serializer_class = LeaveTypeSerializer
+    permission_classes = [IsAuthenticated]  
+    queryset = LeaveType.objects.all()
+
 class AttendanceViewset(
     viewsets.GenericViewSet,
 ):
@@ -137,12 +146,6 @@ class AttendanceViewset(
             return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-
-
-
-        
-
-
 class EmployeeViewset(
     viewsets.GenericViewSet,
     mixins.CreateModelMixin,
@@ -156,7 +159,6 @@ class EmployeeViewset(
             return Employee.objects.all()
         else:
             return Employee.objects.none()
-    
     
 
 class DepartmentViewset(
@@ -181,6 +183,13 @@ class LeaveRequestViewset(
 ):
     serializer_class = LeaveRequestSerializer
     permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        if Employee.objects.filter(user=self.request.user).exists():
+            employee = Employee.objects.get(user=self.request.user)
+            serializer.save(user=employee)
+        else:
+            return Response({"error": "You are not an employee"}, status=status.HTTP_403_FORBIDDEN)
 
     def get_queryset(self):
         user = self.request.user
@@ -222,9 +231,6 @@ class LeaveRequestViewset(
     @action(detail=True, methods=['delete'], permission_classes=[IsAuthenticated])
     def reject(self, request, pk):
         leave_request = self.get_object()
-        if not request.user.is_staff:
-            return Response({"error": "You are not authorized to perform this action."}, status=status.HTTP_403_FORBIDDEN)
-
         leave_request.delete()
 
         return Response({"message": "Leave request deleted successfully"}, status=status.HTTP_200_OK)

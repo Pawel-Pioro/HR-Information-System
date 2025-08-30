@@ -5,6 +5,7 @@ from . import views
 
 router = DefaultRouter()
 router.register('leaveRequests', views.LeaveRequestViewset, basename='leave_requests')
+router.register('leaveTypes', views.LeaveTypeViewset, basename='leave_types')
 router.register('departments', views.DepartmentViewset, basename='departments')
 router.register('users', views.UserViewset, basename='users')
 router.register('employees', views.EmployeeViewset, basename='employees')

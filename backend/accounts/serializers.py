@@ -5,7 +5,12 @@ from django.utils import timezone
 
 UserModel = get_user_model()
 
-from .models import Employee, Department, LeaveRequest, Attendance
+from .models import Employee, Department, LeaveRequest, Attendance, LeaveType
+
+class LeaveTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LeaveType
+        fields = ('id', 'name', 'deducts_balance')
 
 class LeaveRequestSerializer(serializers.ModelSerializer):
     leave_type_name = serializers.CharField(source='leave_type.name', read_only=True)
@@ -14,9 +19,29 @@ class LeaveRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = LeaveRequest
         fields = "__all__"
+        read_only_fields = ('user',)
 
     def get_duration(self, obj):
         return obj.duration()
+    
+    def validate(self, data):
+        start_date = data.get('start_date')
+        end_date = data.get('end_date')
+        today = timezone.localdate()  
+
+        # Check start date is in the future
+        if start_date and start_date < today:
+            raise serializers.ValidationError({
+                'start_date': 'Start date must be in the future.'
+            })
+
+        # Check end date is after start date
+        if start_date and end_date and end_date < start_date:
+            raise serializers.ValidationError({
+                'end_date': 'End date cannot be before start date.'
+            })
+
+        return data
     
 class AttendanceSerializer(serializers.ModelSerializer):
     clockIn = serializers.DateTimeField( read_only=True)

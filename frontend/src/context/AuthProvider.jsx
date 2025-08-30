@@ -16,7 +16,8 @@ export default function AuthProvider({ children }) {
         "first_name": "",
         "last_name": "",
         "is_staff": false,
-        "logged_in": false
+        "logged_in": false,
+        "employee": null
     }
 
     const [user, setUser] = useState(defaultUser)

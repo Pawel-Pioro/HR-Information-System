@@ -32,7 +32,6 @@ export default function EditEmployee() {
     useEffect(() => {
         client.get(`accounts/users/${id}/`).then((response) => {
             const data = response.data
-
             setEmployee(data)
 
             setUserInputValues({
@@ -41,9 +40,11 @@ export default function EditEmployee() {
                 email: data.email
             })
             setEmployeeInputValues({
-                ...employeeInputValues,
                 employmentStatus: data.employee?.employmentStatus,
                 dateOfBirth: data.employee?.dateOfBirth,
+                phoneNumber: data.employee?.phoneNumber,
+                department: data.employee?.department,
+                jobTitle: data.employee?.jobTitle,
 
                 hiredDate: data.employee?.hiredDate,
                 startTime: data.employee?.startTime,
